@@ -1,4 +1,3 @@
-
 // Supports PDF d'Ateliers Arduino par www.mon-club-elec.fr
 // http://www.mon-club-elec.fr/pmwiki_mon_club_elec/pmwiki.php?n=MAIN.ATELIERS
 // par X. HINAULT - tous droits réservés - 2013 - GPLv3
@@ -379,3 +378,26 @@ void loop(){ // debut de la fonction loop()
 
 
 } // fin de la fonction loop()
+
+    //------- fonctions communes ----- 
+
+void envoiEnteteHTTP(EthernetClient clientIn){
+ 
+ if (clientIn) {
+
+   //-- envoi de la réponse HTTP --- 
+           clientIn.println(F("HTTP/1.1 200 OK")); // entete de la réponse : protocole HTTP 1.1 et exécution requete réussie
+           clientIn.println(F("Content-Type: text/html")); // précise le type de contenu de la réponse qui suit 
+           clientIn.println(F("Connnection: close")); // précise que la connexion se ferme après la réponse
+           clientIn.println(); // ligne blanche 
+           
+           //--- envoi en copie de la réponse http sur le port série 
+           Serial.println(F("La reponse HTTP suivante est envoyee au client distant :")); 
+           Serial.println(F("HTTP/1.1 200 OK"));
+           Serial.println(F("Content-Type: text/html"));
+           Serial.println(F("Connnection: close"));
+
+ } // fin si client
+ 
+} // fin envoiEnteteHTTP
+
