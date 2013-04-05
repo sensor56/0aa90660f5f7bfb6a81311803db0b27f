@@ -1,0 +1,94 @@
+
+
+// Supports PDF d'Ateliers Arduino par www.mon-club-elec.fr
+// http://www.mon-club-elec.fr/pmwiki_mon_club_elec/pmwiki.php?n=MAIN.ATELIERS
+// par X. HINAULT - tous droits réservés - 2013 - GPLv3
+
+// code :23. HTML + Javascript : Capturer les événements de widgets graphiques d'une librairie Javascript
+
+<!DOCTYPE html > 
+<html> 
+  <head> 
+    
+    	<meta http-equiv="content-type" content="text/html; charset=UTF-8" /> <!-- Encodage de la page  --> 
+
+			<script language="javascript" type="text/javascript"> 
+	 		<!-- 
+	 		 
+			// code Javascript ici 
+
+  			function path(jsFileNameIn) { // fonction pour fixer chemin absolu 				 
+					var js = document.createElement("script"); 
+					js.type = "text/javascript"; 
+					js.src = " http://www.mon-club-elec.fr/mes_javascripts/rgraph/"+jsFileNameIn; // <=== modifier ici chemin ++ 
+					document.head.appendChild(js);					 
+					//alert(js.src); // debug 
+				} 
+
+				//---- fichiers a charger --- 				 
+				path('RGraph.common.core.js'); 
+				path('RGraph.common.dynamic.js'); 
+				path('RGraph.common.effects.js'); 
+				path('RGraph.gauge.js');	 
+				path('RGraph.meter.js');			 
+
+		 
+				// variables / objets globaux - a declarer avant les fonctions pour eviter problemes de portee		 
+				var canvas= null; // pour objet Canvas 
+				var contextCanvas = null; // pour objet context Canvas 
+				var textInputValeur=null; 	
+
+  			window.onload = function () { // fonction executee apres chargement de la page HTML 
+
+					canvas = document.getElementById("nomCanvas"); // declare objet canvas a partir id = nom 
+					textInputValeur= document.getElementById("valeur"); // declare objet champ text a partir id = nom 
+				 
+					//--- code graphique --- 
+              		 
+					// parametres sont : nom du canva, min, max, valeur courante 
+					//var gauge = new RGraph.Gauge('nomCanvas', 0, 180, 0); // declare widget graphique 
+					var gauge = new RGraph.Meter('nomCanvas', 0,180,90); 
+					gauge.Set('chart.angles.start', PI ); // angle debut 
+            				gauge.Set('chart.angles.end', TWOPI ); // angle fin 
+            				gauge.Set('segment.radius.start', 145); // blanc interne 
+            				gauge.Set('chart.tickmarks.big.num', 10); // nombre marques principales 
+            				gauge.Set('chart.tickmarks.small.num', 100); // nombre marques unitaires 
+            				// il y a 1 label chiffre tous les 1/10 eme de l'echelle globale independemment des marques 
+ 
+					gauge.Draw(); // dessine le widget graphique dans le canvas 
+
+					textInputValeur.value=gauge.value; 	// valeur courante par defaut 
+					 
+					//--- gestion de l'évènement on click --- necessite dynamic.js 
+					gauge.canvas.onclick_rgraph = function (e){ 
+
+			                	var obj   = e.target.__object__; 
+			                	var value = obj.getValue(e); 
+                
+			                	obj.value = value;                
+						textInputValeur.value=Math.round(obj.value); 	// MAJ valeur courante avec nouvelle valeur 
+                
+                				RGraph.Effects.Gauge.Grow(obj); // necessite effect.js 
+                				//obj.Draw(); // redessine widget 
+                
+ 	           			} // fin onclick_rgraph           
+        			} // fin fonction onload
+
+	        	-->	 
+			</script>   
+        
+    <title>Test RGraph simple</title> 
+    
+	</head> 
+
+	<body> 
+	 
+    	<canvas id="nomCanvas" width="400" height="250">[Canvas non disponible]</canvas> 
+    	<br />			 
+ 	Valeur Courante=<input type="text" id="valeur" size="10"/>			 
+	<br /> 
+	Test simple reglage afficheur analogique avec aiguille par clic souris 
+    
+
+	</body> 
+</html>
