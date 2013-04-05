@@ -1,0 +1,123 @@
+// Supports PDF d'Ateliers Arduino par www.mon-club-elec.fr
+// http://www.mon-club-elec.fr/pmwiki_mon_club_elec/pmwiki.php?n=MAIN.ATELIERS
+// par X. HINAULT - tous droits réservés - 2013 - GPLv3
+
+// code : 14. HTML + Javascript : Utiliser un canvas comme un « slider »
+
+<!DOCTYPE HTML> 
+
+<!-- Debut de la page HTML  --> 
+<html> 
+     
+  <!-- Debut entete --> 
+	<head> 
+ 	    
+		<meta charset="utf-8" /> <!-- Encodage de la page  --> 
+		<title>JavaScript: Test Canva </title> <!-- Titre de la page --> 
+
+		<!-- Debut du code Javascript  --> 
+		<script language="javascript" type="text/javascript"> 
+		<!--			 
+
+		// code javascript par X. HINAULT - www.mon-club-elec.fr - fev 2013 - tous droits reserves - GPL v3  
+		 
+		// variables / objets globaux - a declarer avant les fonctions pour eviter problemes de portee		 
+		var canvas= null; // pour objet Canvas 
+		var contextCanvas = null; // pour objet context Canvas 
+		var textInputX=null; 		 
+		var textInputY=null; 
+		var textInputMin=null; 		 
+		var textInputMax=null; 
+		var textInputValeur=null; 		 
+
+		window.onload = function() { 
+ 			 
+			canvas = document.getElementById("nomCanvas"); // declare objet canvas a partir id = nom 
+
+			textInputX= document.getElementById("valeurX"); // declare objet champ text a partir id = nom 
+			textInputY= document.getElementById("valeurY"); // declare objet champ text a partir id = nom 
+			textInputMin= document.getElementById("valeurMin"); // declare objet champ text a partir id = nom 
+			textInputMax= document.getElementById("valeurMax"); // declare objet champ text a partir id = nom 
+			textInputValeur= document.getElementById("valeur"); // declare objet champ text a partir id = nom 
+				 
+			canvas.width = 500; // largeur canvas 
+			canvas.height = 20; // hauteur canvas 
+			 
+			textInputMin.value="0"; // valeur minimale par défaut 			 
+			textInputMax.value="100"; // valeur maximale par défaut 
+			textInputValeur.value=(Number(textInputMax.value)-Number(textInputMin.value))/2; 	// valeur courante par defaut 
+				 
+			if (canvas.getContext){ // la fonction getContext() renvoie True si canvas accessible 
+
+				contextCanvas = canvas.getContext("2d"); // objet context global permettant acces aux fonctions de dessin 
+ 					 
+				// rectangle gris de la taille du canvas 
+				contextCanvas.fillStyle = "rgb(200,200,200)"; // couleur de remplissage rgb 0-255 
+				contextCanvas.fillRect (0, 0, canvas.width, canvas.height); // rectangle 
+
+				// rectangle avant
+				contextCanvas.fillStyle = "rgb(0,255,0)"; // couleur remplissage 
+ 				contextCanvas.fillRect (0, 0, canvas.width/2, canvas.height); // rectangle 
+ 				 
+ 				canvas.addEventListener('click',mouseClick,false); // active la capture d'evenement - appelle la fonction mouseMove et lui passe l'evenement 
+
+  			 				 
+			} // fin si canvas existe 
+
+			else { 
+				alert("Canvas non disponible")// code si canvas non disponible 
+			} // fin else 
+
+		} // fin window.onload 
+		 
+
+		function mouseClick(e) { // fonction recoit evenement obtenu par addEventListener 
+		 
+    		var mouseX, mouseY; 
+
+    		// firefox - recupere les coordonnees de la souris dans le canvas 
+       	 	mouseX = e.layerX; 
+        	mouseY = e.layerY; 
+
+    		textInputX.value=mouseX; // affiche valeur dans le champ texte 
+    		textInputY.value=mouseY; // affiche valeur dans le champ texte 
+    		 
+    		// rectangle gris de la taille du canvas 
+		contextCanvas.fillStyle = "rgb(200,200,200)"; // couleur de remplissage rgb 0-255 
+		contextCanvas.fillRect (0, 0, canvas.width, canvas.height); // rectangle 
+		
+		// rectangle avant
+    		contextCanvas.fillStyle = "rgb(0,255,0)"; // couleur remplissage 
+ 		contextCanvas.fillRect (0, 0, mouseX, canvas.height); // rectangle 
+ 			 
+		// map valeur mouseX en valeur reelle    		 
+    		textInputValeur.value=Number(textInputMin.value)+Math.round((Number(textInputMax.value)-Number(textInputMin.value))*mouseX/canvas.width); // affiche valeur dans le champ texte 
+ 			 
+		} // fin mouseClick		 
+		//--> 
+		</script> 
+		<!-- Fin du code Javascript -->     
+	</head> 
+	<!-- Fin entete --> 
+     
+	<!-- Debut Corps de page HTML --> 
+	<body > 
+ 		<canvas id="nomCanvas" width="300" height="30" style="position: relative;"></canvas> 
+ 		<!-- style : position relative pour x-y souris ok --> 
+		<!-- IMPORTANT : le canvas doit etre declare AVANT le code qui l'utilise ! --> 
+ 		<br /> 
+ 		X=<input type="text" id="valeurX" /> 
+ 		Y=<input type="text" id="valeurY" />			 
+ 		<br /> 
+ 		Valeur Min=<input type="text" id="valeurMin"  size="10"/> 
+ 		Valeur Max=<input type="text" id="valeurMax" size="10"/> 
+ 		<br />			 
+ 		Valeur Courante=<input type="text" id="valeur" size="10"/>			 	 
+		<br /> 
+		Exemple de slider avec un canvas 
+	</body> 
+	<!-- Fin de corps de page HTML  --> 
+     	 
+</html> 
+<!-- Fin de la page HTML  -->
+
